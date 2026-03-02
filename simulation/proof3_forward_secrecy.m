@@ -119,14 +119,18 @@ for e = 1:5
     end
 end
 
-% Check: no key from any epoch appears in any other epoch
+% Check: no key from any epoch appears in any other epoch (full 10×10 comparison)
 all_cross_epoch_unique = true;
 for e1 = 1:5
     for e2 = 1:5
         if e1 ~= e2
-            cross_matches = sum(all(epoch_key_sets{e1} == reshape(epoch_key_sets{e2}(1,:), 1, []), 2));
-            if cross_matches > 0
-                all_cross_epoch_unique = false;
+            % Compare ALL keys from epoch e1 against ALL keys from epoch e2
+            for k1 = 1:size(epoch_key_sets{e1}, 1)
+                for k2 = 1:size(epoch_key_sets{e2}, 1)
+                    if all(epoch_key_sets{e1}(k1, :) == epoch_key_sets{e2}(k2, :))
+                        all_cross_epoch_unique = false;
+                    end
+                end
             end
         end
     end
